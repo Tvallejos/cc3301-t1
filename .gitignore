@@ -2,3 +2,7 @@ Makefile
 t1.c.plantilla
 t1.h
 test-t1.c
+t1
+t1.o
+test-t1
+test-t1.o

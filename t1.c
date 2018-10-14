@@ -111,27 +111,32 @@ void reemplazar(char *s, char c, char *pal){
 				s++;
 			}
 			*(news)='\0';			
-		}else{/*
+		}else{
 			if(lenpal>1){// de atras hacia adelante copiando pal en cada c
-				s+=lens-1+contador*(lenpal-1);
-				*s='\0';
+				s+=lens;
+				news+=lens+contador*(lenpal-1);
+				*news='\0';
+				news--;
 				s--;
-				news+=lens-1; 
 				for (int i = 0; i < lens; ++i){
-					if(*news == c){
+					if(*s!=c){
+						*news=*s;
+						news--;
+						s--;					
+					}else{
 						pal+=lenpal-1;
-						for (int j = 0; j < lenpal-1; ++j){
-							*s=*pal;
-							s--;
+						for(int j=0;j<lenpal;j++){
+							*news=*pal;
+							news--;
 							pal--;
 						}
-					}else{ 			
-						*s=*news;
+						pal++;
 						s--;
-						news--;							
+
+						
 					}
 				}
-			}*/
+			}
 		}
 	}
 }

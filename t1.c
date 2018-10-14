@@ -57,11 +57,17 @@ char *reemplazo(char *s, char c, char *pal){
 	char * pnueva = & *nueva;						// puntero por si se borran letras
 	while(*s != '\0'){
 		if (*s == c){
-			for (int i = 0; i < lenpal; ++i){		// se copia la palabra si se ve
-				* (pnueva+i)= * (pal+i);
+			int i = 0;
+			while(i<lenpal){
+				*pnueva=*pal;
+				pnueva++;
+				pal++;
+				i++;
 			}
-			pnueva+=lenpal;
-			
+			/*for (int i = 0; i < lenpal; ++i){		// se copia la palabra si se ve
+				* (pnueva+i)= * (pal+i);
+			}*/
+			pal-=lenpal;
 		}else{
 			*pnueva=*s;								// se copia la misma letra si no 'c'
 			pnueva++;

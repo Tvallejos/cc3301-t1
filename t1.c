@@ -3,20 +3,6 @@
 #include <stdlib.h>
 #include "t1.h"
 
-void bin(int num)
-{
-    int sup = 8*sizeof(int);
-    while(sup >= 0)
-    {
-        if(num & (((long int)1) << sup))
-            printf("1");
-        else
-            printf("0");
-        sup--;
-    }
-    printf("\n");
-}
-
 uint borrar_bits(uint x, uint pat, int len){
 	int num = 8*sizeof(int);
 	uint mask=(1<<len)-1; // se crea una mascara para obtener solo los len bits de mas a la izq de x
@@ -27,7 +13,7 @@ uint borrar_bits(uint x, uint pat, int len){
 		if((mask&x)==pat){
 			suma+=pat;	   // si el patron es encontrado se suma al acumulado
 		}
-		mask>>=1;
+		mask>>=1;	       // se revisa el patron en el siguiente bit
 		pat>>=1;
 		num--;
 	}
@@ -35,27 +21,27 @@ uint borrar_bits(uint x, uint pat, int len){
 }
 
 char *reemplazo(char *s, char c, char *pal){
-	int contador=0; // cuantas veces aparece c
-	int lens=0;		// largo de s
+	int contador=0; 	   // cuantas veces aparece c
+	int lens=0;			   // largo de s
 	while(*s != '\0'){
 		if(*s==c){
-			contador++; // se suma 1 cada vez que se ve c
+			contador++;    // se suma 1 cada vez que se ve c
 		}
-		lens++;
+		lens++;			   // se suma 1 al largo y se avanza por s
 		s++;
 	}
 	s-=lens;					// se devuelve el puntero al principio del string
 	
 	int lenpal  = 0;			// contador del largo de la palabra
 	while(*pal != '\0'){
-		lenpal++;
+		lenpal++;				// se suma 1 al largo y se avanza por pal
 		pal++;
 	}
 	pal-=lenpal;				// se devuelve el puntero al principio del string
 	char * nueva = malloc(lens+contador*(lenpal-1)+1); // se pide memoria
-	char * pnueva = & *nueva;						// puntero por si se borran letras
+	char * pnueva = & *nueva;						   // puntero por si se borran letras
 	while(*s != '\0'){
-		if (*s == c){
+		if (*s == c){								   // si se ve c se reemplaza por pal
 			int i = 0;
 			while(i<lenpal){
 				*pnueva=*pal;
@@ -68,7 +54,7 @@ char *reemplazo(char *s, char c, char *pal){
 			*pnueva=*s;								// se copia la misma letra si no es 'c'
 			pnueva++;
 		}
-		s++;
+		s++;										// se avanza por s
 	}
 	*(++pnueva)='\0';								// se agrega la terminacion del string
 	return nueva; 
@@ -92,7 +78,7 @@ void reemplazar(char *s, char c, char *pal){
 		pal++;
 	}
 	pal-=lenpal;				// se devuelve el puntero al principio del string
-	if(lenpal==1){				// se copia la palabra tal cual cambiando c por pal
+	if(lenpal==1){				// se copia la palabra s cambiando las c por pal
 		while(*s != '\0'){
 			if(*s == c){
 				*s = * pal;
@@ -101,48 +87,32 @@ void reemplazar(char *s, char c, char *pal){
 		}
 		s-=lens;
 	}else{
-		if(lenpal==0){ 			// se borran las c //PASA ESTE TEST
+		if(lenpal==0){ 			// se copia la palabra s borrando las c 
 			while(*s != '\0'){
 				if(*s==c){
 					s++;
 				}
-				*news= *s;
-				news++;
-				s++;
+				*(news++)= *(s++);
 			}
 			*(news)='\0';			
 		}else{
-			if(lenpal>1){// de atras hacia adelante copiando pal en cada c
-				s+=lens;
-				news+=lens+contador*(lenpal-1);
-				*news='\0';
-				news--;
-				s--;
-				for (int i = 0; i < lens; ++i){
-					if(*s!=c){
-						*news=*s;
-						news--;
-						s--;					
-					}else{
+			if(lenpal>1){							// de atras hacia adelante copiando pal en cada c
+				s+=lens-1;							// se mueve el puntero hacia el final de s
+				news+=lens+contador*(lenpal-1);		// se mueve el puntero hacia el final del nuevo string
+				*(news--)='\0';						// se agrega la terminacion
+				for (int i = 0; i < lens; ++i){		// se copian las letras
+					if(*s!=c){						// si es != de c se copia la misma
+						*(news--)=*(s--);				
+					}else{							// si es c se va copiando pal de atras hacia adelante
 						pal+=lenpal-1;
 						for(int j=0;j<lenpal;j++){
-							*news=*pal;
-							news--;
-							pal--;
+							*(news--)=*(pal--);
 						}
 						pal++;
 						s--;
-
-						
 					}
 				}
 			}
 		}
 	}
 }
-
-/*int main(int argc, char const *argv[])
-
-
-
-}*/
